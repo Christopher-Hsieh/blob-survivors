@@ -2,7 +2,7 @@
   "name": "blob-survivors",
   "version": "1.0.0",
   "description": "It's Blob Survivors",
-  "main": "dist/index.js",
+  "main": "dist/index.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

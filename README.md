@@ -9,3 +9,5 @@ This is a [Phaser 3](https://github.com/photonstorm/phaser) starter with [TypeSc
 | `yarn build` | Builds code bundle with production settings  |
 | `yarn serve` | Run a web server to serve built code bundle |
 
+[![pages-build-deployment](https://github.com/Christopher-Hsieh/blob-survivors/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Christopher-Hsieh/blob-survivors/actions/workflows/pages/pages-build-deployment) 
+[![CI](https://github.com/Christopher-Hsieh/blob-survivors/actions/workflows/main.yml/badge.svg)](https://github.com/Christopher-Hsieh/blob-survivors/actions/workflows/main.yml)
