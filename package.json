@@ -1,7 +1,7 @@
 {
-  "name": "phaser3-rollup-typescript",
-  "version": "1.1.0",
-  "description": "Phaser 3 TypeScript Starter",
+  "name": "blob-survivors",
+  "version": "1.0.0",
+  "description": "It's Blob Survivors",
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
@@ -10,21 +10,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geocine/phaser3-rollup-typescript.git"
+    "url": "git+https://github.com/Christopher-Hsieh/blob-survivors.git"
   },
-  "author": "Aivan Monceller",
+  "author": "Chris Hsieh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geocine/phaser3-rollup-typescript/issues"
+    "url": "https://github.com/Christopher-Hsieh/blob-survivors/issues"
   },
-  "homepage": "https://github.com/geocine/phaser3-rollup-typescript#readme",
+  "homepage": "https://github.com/Christopher-Hsieh/blob-survivors#readme",
   "devDependencies": {
-    "@types/node": "^17.0.31",
-    "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-replace": "^4.0.0",
+    "@rollup/plugin-alias": "^4.0.3",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-replace": "^5.0.2",
     "phaser": "^3.55.2",
-    "typescript": "^4.6.4",
-    "vite": "^2.9.13"
+    "typescript": "^5.0.2",
+    "vite": "^4.2.1"
   }
 }
