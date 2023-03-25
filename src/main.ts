@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { menu } from './scenes/menu-scene';
 import { MyScene } from './scenes/my-scene';
 
 const GameConfig: Phaser.Types.Core.GameConfig = {

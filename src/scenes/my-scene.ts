@@ -1,6 +1,5 @@
 import Phaser from "phaser";
-import particle from '../assets/particle.png';
-import old_man from '../assets/old_man/48x48.png';
+import player_sprite from '../assets/old_man/16x16.png';
 
 export class MyScene extends Phaser.Scene {
   keys: any;
@@ -11,24 +10,34 @@ export class MyScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('player', old_man, { frameWidth: 48, frameHeight: 48 });
+    //  16x16 is the size of each frame
+    //  There are 18 frames in the PNG - you can leave this value blank if the frames fill up the entire PNG, but in this case there are some
+    //  blank frames at the end, so we tell the loader how many to load
+    this.load.spritesheet('player', player_sprite, { frameWidth: 16, frameHeight: 16 });
   }
 
   create() {
-    this.keys = this.input.keyboard.addKeys("W,A,S,D");
     // Same:
     // this.keys = this.input.keyboard.addKeys({ W: 'W', A: 'A', S: 'S', D: 'D' });
 
     // Named keys:
     // this.keys = this.input.keyboard.addKeys({ up: 'W', left: 'A', down: 'S', right: 'D' });
-
+    this.keys = this.input.keyboard.addKeys("W,A,S,D");
+    this.text = this.add.text(20, 40, "", { color: '#F2DC23' });
     console.log("keys", this.keys);
 
+
     this.player = this.physics.add.sprite(400, 300, 'player');
+    this.player.setCollideWorldBounds(true).setScale(5);
+    this.anims.create({
+        key: 'walk',
+        frames: this.anims.generateFrameNumbers('player', { start: 1, end: 4 }),
+        frameRate: 5,
+        repeat: -1
+        // hideOnComplete: false,
+      });
+    this.player.anims.play('walk');
 
-    this.player.setCollideWorldBounds(true);
-
-    this.text = this.add.text(20, 40, "", { color: '#F2DC23' });
 
   }
 
