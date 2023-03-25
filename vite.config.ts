@@ -4,6 +4,9 @@ import replace from '@rollup/plugin-replace';
 export default defineConfig({
   base: '/blob-survivors/',
   build: {
+    // Do not inline images and assets to avoid the phaser error
+    // "Local data URIs are not supported"
+    assetsInlineLimit: 0,
     rollupOptions: {
       plugins: [
         //  Toggle the booleans here to enable / disable Phaser 3 features:
