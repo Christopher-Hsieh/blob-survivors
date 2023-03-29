@@ -1,20 +1,23 @@
+// <reference types="Phaser" path=”../node_modules/phaser/types/phaser.d.ts”/>
 import Phaser from 'phaser';
-import { MyScene } from './scenes/my-scene';
+import { MainScene } from './scenes/my-scene';
+import { GAME_HEIGHT, GAME_WIDTH } from './scenes/constants';
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
-  title: 'ExampleGame',
+  title: '{Rose}',
   version: '1.0',
-  width: 1200,
-  height: 800,
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
   type: Phaser.AUTO,
   parent: 'app',
   // `as as Phaser.Types.Scenes.SettingsConfig[]` is required until https://github.com/photonstorm/phaser/pull/6235
   // scene: [menu()] as Phaser.Types.Scenes.SettingsConfig[],
   scene: [
-    MyScene
+    MainScene
   ],
   input: {
-    keyboard: true
+    keyboard: true,
+    mouse: true
   },
   physics: {
     default: 'arcade',
@@ -30,7 +33,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
     }
   },
   backgroundColor: '#1B1C22',
-  render: { pixelArt: true },
+  render: { pixelArt: false },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
