@@ -2,6 +2,7 @@
 import Phaser from 'phaser';
 import { MainScene } from './scenes/main-scene';
 import { GAME_HEIGHT, GAME_WIDTH } from './utils/constants';
+import { Preloader } from './scenes/preloader';
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
   title: '{Rose}',
@@ -13,7 +14,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
   // `as as Phaser.Types.Scenes.SettingsConfig[]` is required until https://github.com/photonstorm/phaser/pull/6235
   // scene: [menu()] as Phaser.Types.Scenes.SettingsConfig[],
   scene: [
-    MainScene
+    Preloader, MainScene
   ],
   input: {
     keyboard: true,
@@ -35,7 +36,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#1B1C22',
   render: { pixelArt: false, antialias: true },
   scale: {
-    mode: Phaser.Scale.FIT,
+    // mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     // `fullscreenTarget` must be defined for phones to not have
     // a small margin during fullscreen.
