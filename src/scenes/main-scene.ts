@@ -17,7 +17,7 @@ export class MainScene extends Phaser.Scene {
   hitShape() {
     this.physics.pause();
     this.physics.add.group
-    this.hit_debug_text.setText("Player Hit!");
+    this.hit_debug_text.setText("You Suck!");
   }
   
 
@@ -27,8 +27,7 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     this.keys = this.input.keyboard.addKeys("W,A,S,D");
-    this.score_text = this.add.text(20, 80, "", { color: '#F2DC23' });
-    this.wasd_debug_text = this.add.text(20, 40, "", { color: '#F2DC23' });
+    this.score_text = this.add.text(20, 80, "Score: 0", { color: '#F2DC23' });
     this.hit_debug_text = this.add.text(10, 10, "", { color: '#F2DC23' });
     this.score = 0;
 
@@ -47,7 +46,7 @@ export class MainScene extends Phaser.Scene {
     });
     
     this.rose = this.sound.add('rose') as Phaser.Sound.HTML5AudioSound;
-    this.rose.play();
+    // this.rose.play();
     // this.spawnShape('triangle');
   }
 
@@ -55,10 +54,9 @@ export class MainScene extends Phaser.Scene {
     this.shapes.children.entries.forEach(shape=> {
       //@ts-ignore
       if (shape.x < -50) {
-        console.log(shape);
         shape.destroy();
         this.score = this.score + 10;
-        this.score_text.setText(this.score.toString());
+        this.score_text.setText("Score: " + this.score.toString());
           // this.shapes.killAndHide(shape);
       }
   });
@@ -75,10 +73,7 @@ export class MainScene extends Phaser.Scene {
       this.player.setVelocityY(300);
     }
 
-    this.wasd_debug_text.setText(
-      // @ts-ignore
-      Object.entries(this.keys).map(([name, key]) => `${name}: keyCode=${key.keyCode} isDown=${key.isDown} isUp=${key.isUp} timeDown=${key.timeDown} timeUp=${key.timeUp}`)
-    );
+
   }
 
   spawnSquare() {
