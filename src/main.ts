@@ -1,7 +1,7 @@
 // <reference types="Phaser" path=”../node_modules/phaser/types/phaser.d.ts”/>
 import Phaser from 'phaser';
-import { MainScene } from './scenes/my-scene';
-import { GAME_HEIGHT, GAME_WIDTH } from './scenes/constants';
+import { MainScene } from './scenes/main-scene';
+import { GAME_HEIGHT, GAME_WIDTH } from './utils/constants';
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
   title: '{Rose}',
@@ -33,7 +33,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
     }
   },
   backgroundColor: '#1B1C22',
-  render: { pixelArt: false },
+  render: { pixelArt: false, antialias: true },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

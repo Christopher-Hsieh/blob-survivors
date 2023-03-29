@@ -4,7 +4,7 @@ import square_image from '../assets/square.png';
 import triangle_image from '../assets/triangle.png';
 import rose_song_mp3 from '../assets/rose.mp3';
 import rose_song_ogg from '../assets/rose.ogg';
-import { GAME_HEIGHT, GAME_WIDTH } from "./constants";
+import { GAME_HEIGHT, GAME_WIDTH } from "../utils/constants";
 
 export class MainScene extends Phaser.Scene {
   keys: any;
