@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import replace from '@rollup/plugin-replace';
 
 export default defineConfig({
-  base: '/blob-survivors/',
+  base: '/rose-remake/',
   build: {
     // Do not inline images and assets to avoid the phaser error
     // "Local data URIs are not supported"
