@@ -9,7 +9,7 @@ export class Triangle extends Phaser.Physics.Arcade.Sprite {
     spawn() {
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this);
-        this.setScale(.4);
+        this.setScale(.4).setSize(50,50);
         this.setAngle(Phaser.Math.Between(0, 360)); // Angle in degrees
     }
     

@@ -33,9 +33,9 @@ export class MainScene extends Phaser.Scene {
     this.score_text = this.add.text(20, 80, "Score: 0", { color: '#F2DC23' });
     this.hit_debug_text = this.add.text(10, 10, "", { color: '#F2DC23' });
     this.score = 0;
+    this.player = this.physics.add.image(400, 300, 'player').setScale(.4).setCircle(38);
+    this.player.setCollideWorldBounds(true);
 
-    this.player = this.physics.add.image(400, 300, 'player');
-    this.player.setCollideWorldBounds(true).setScale(.4);
 
     this.shapes = this.physics.add.group();
   
@@ -134,10 +134,37 @@ export class MainScene extends Phaser.Scene {
     this.tweens.add({
       targets: triangle,
       x: -50,
-      duration: 4000,
+      duration: Phaser.Math.Between(3000, 5000),
       // repeat: 4,
       ease: 'Linear',
       // completeDelay: 3000
+      angle: {
+
+        getEnd: function (target, key, value)
+        {
+            var a = 90;
+
+            if (Math.random() > 0.5)
+            {
+                a = 180;
+            }
+
+            if (Math.random() > 0.5)
+            {
+                return target.angle + a;
+            }
+            else
+            {
+                return target.angle - a;
+            }
+        },
+
+        getStart: function (target, key, value)
+        {
+            return target.angle;
+        }
+
+    }
   });
   }
 }
