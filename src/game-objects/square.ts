@@ -9,9 +9,9 @@ export class Square extends Phaser.Physics.Arcade.Sprite {
     }
 
     spawn() {
-        // this.setScale(.2);
+        this.setScale(.4);
         this.setAngle(Phaser.Math.Between(0, 360)); // Angle in degrees
-        this.setVelocity(Phaser.Math.Between(-250, -120), 0); // Setup dynamic velocity
+        this.setVelocity(Phaser.Math.Between(-400, -200), 0); // Setup dynamic velocity
     }
     
 }

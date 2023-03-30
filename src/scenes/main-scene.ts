@@ -32,7 +32,7 @@ export class MainScene extends Phaser.Scene {
     this.score = 0;
 
     this.player = this.physics.add.image(400, 300, 'player');
-    this.player.setCollideWorldBounds(true).setScale(.2);
+    this.player.setCollideWorldBounds(true).setScale(.4);
 
     this.shapes = this.physics.add.group();
   
@@ -47,6 +47,9 @@ export class MainScene extends Phaser.Scene {
     
     this.rose = this.sound.add('rose') as Phaser.Sound.HTML5AudioSound;
     // this.rose.play();
+
+
+    
     // this.spawnShape('triangle');
   }
 
