@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 
-import { GAME_HEIGHT, GAME_WIDTH, SCENES } from "../utils/constants";
+import { GAME_HEIGHT, GAME_WIDTH, SCENES, SPAWN_ZONE } from "../utils/constants";
 import { Square } from "../game-objects/square";
+import { Triangle } from "../game-objects/triangle";
 
 export class MainScene extends Phaser.Scene {
   keys: any;
@@ -15,8 +16,10 @@ export class MainScene extends Phaser.Scene {
   rose: Phaser.Sound.HTML5AudioSound;
 
   hitShape() {
+    this.rose.stop();
     this.physics.pause();
-    this.physics.add.group
+    this.scene.pause();
+    // this.physics.add.group
     this.hit_debug_text.setText("You Suck!");
   }
   
@@ -38,19 +41,46 @@ export class MainScene extends Phaser.Scene {
   
     this.physics.add.collider(this.player, this.shapes, this.hitShape, null, this);
 
+    // Spawn Squares every 1 second after 7.5 seconds
     this.time.addEvent({
-      delay: 1000, // spawn each second
-      loop: true,
+      delay: 6500, // Trigger at 7.5 sec
       callbackScope: this,
-      callback: this.spawnSquare
+      callback: function() { 
+        this.time.addEvent({
+          delay: 500, // spawn each .5 second
+          loop: true,
+          callbackScope: this,
+          callback: this.spawnSquare
+        });
+      }
+    });
+
+    // Spawn 10 triangles at the start with crazy tween
+    this.time.addEvent({
+      startAt: 500,
+      delay: 620,
+      repeat: 10,
+      callbackScope: this,
+      callback: this.spawnTriangle
+    });
+
+    // Start spamming triangles at 18 secs
+    this.time.addEvent({
+      delay: 18500,
+      callbackScope: this,
+      callback: function() { 
+        this.time.addEvent({
+          delay: 300, // spawn each .5 second
+          loop: true,
+          callbackScope: this,
+          callback: this.spawnTriangle
+        });
+      }
     });
     
     this.rose = this.sound.add('rose') as Phaser.Sound.HTML5AudioSound;
-    // this.rose.play();
+    this.rose.play();
 
-
-    
-    // this.spawnShape('triangle');
   }
 
   update(time: number, delta: number): void {
@@ -80,11 +110,35 @@ export class MainScene extends Phaser.Scene {
   }
 
   spawnSquare() {
-    const x = GAME_WIDTH;
-    const y = Phaser.Math.Between(0, GAME_HEIGHT);
-    const square = new Square(this, x, y);
+    const square = new Square(this, SPAWN_ZONE, Phaser.Math.Between(0, GAME_HEIGHT));
     this.shapes.add(square);
     square.spawn();
+    // TODO figure out how to sync tweens. likely using groups wrong.
+    this.tweens.add({
+      targets: square,
+      scaleX: .5,
+      scaleY: .5,
+      ease: 'Sine.easeInOut',
+      duration: 100,
+      // delay: i * 50,
+      repeat: -1,
+      yoyo: false,
+      repeatDelay: 200
+    });
+  }
+
+  spawnTriangle() {
+    const triangle = new Triangle(this, SPAWN_ZONE, Phaser.Math.Between(GAME_HEIGHT / 4, GAME_HEIGHT*3/4 ));
+    this.shapes.add(triangle);
+    triangle.spawn();
+    this.tweens.add({
+      targets: triangle,
+      x: -50,
+      duration: 4000,
+      // repeat: 4,
+      ease: 'Linear',
+      // completeDelay: 3000
+  });
   }
 }
 

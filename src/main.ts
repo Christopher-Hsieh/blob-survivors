@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { MainScene } from './scenes/main-scene';
 import { GAME_HEIGHT, GAME_WIDTH } from './utils/constants';
 import { Preloader } from './scenes/preloader';
+import { Start } from './scenes/start';
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
   title: '{Rose}',
@@ -24,7 +25,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       // gravity: { x: 10 },
-      debug: true,
+      debug: false,
       debugShowBody: true,
       debugShowStaticBody: true,
       debugShowVelocity: true,
