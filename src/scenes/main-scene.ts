@@ -71,7 +71,15 @@ export class MainScene extends Phaser.Scene {
         }, this);
 
     this.shapes = this.physics.add.group();
-  
+    // this.tweens.add({
+    //   targets: this.shapes,
+    //   ease: 'Sine.easeInOut',
+    //   duration: 100,
+    //   // delay: i * 50,
+    //   repeat: -1,
+    //   yoyo: false,
+    //   repeatDelay: 200
+    // });
     this.physics.add.collider(this.player, this.shapes, this.hitShape, null, this);
 
     // Spawn Squares every 1 second after 7.5 seconds
@@ -126,20 +134,20 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.rose = this.sound.add('rose', {volume: .75}) as Phaser.Sound.HTML5AudioSound;
-    this.rose.play();
+    // this.rose.play();
 
   }
 
   update(time: number, delta: number): void {
-    this.shapes.children.entries.forEach(shape=> {
-      //@ts-ignore
-      if (shape.x < -50) {
-        shape.destroy();
+    const children = this.shapes.getChildren() as Phaser.Physics.Arcade.Sprite[];
+    for (const child of children ) {
+      if (child.x < -50) {
+        child.destroy();
         this.score = this.score + 10;
         this.score_text.setText("Score: " + this.score.toString());
-          // this.shapes.killAndHide(shape);
       }
-  });
+    }
+
     this.player.setVelocity(0);
     if (this.keys.A.isDown) {
       this.player.setVelocityX(-260);
@@ -160,17 +168,7 @@ export class MainScene extends Phaser.Scene {
     this.shapes.add(square);
     square.spawn();
     // TODO figure out how to sync tweens. likely using groups wrong.
-    this.tweens.add({
-      targets: square,
-      scaleX: .5,
-      scaleY: .5,
-      ease: 'Sine.easeInOut',
-      duration: 100,
-      // delay: i * 50,
-      repeat: -1,
-      yoyo: false,
-      repeatDelay: 200
-    });
+
   }
 
   spawnBlue() {
@@ -185,7 +183,7 @@ export class MainScene extends Phaser.Scene {
     triangle.spawn();
     this.tweens.add({
       targets: triangle,
-      x: -50,
+      x: -500,
       duration: Phaser.Math.Between(3000, 5000),
       // repeat: 4,
       ease: 'Linear',
