@@ -16,11 +16,14 @@ export class MainScene extends Phaser.Scene {
   shapes: Phaser.Physics.Arcade.Group;
   rose: Phaser.Sound.HTML5AudioSound;
   x: number;
+
   hitShape() {
     this.rose.stop();
     this.physics.pause();
     this.scene.pause();
-    this.hit_debug_text.setText("You Lose!");
+    this.input.mouse.releasePointerLock();
+    this.hit_debug_text.setText("- Press r to retry. -");
+    this.scene.launch(SCENES.GAME_OVER);
   }
   
 
@@ -29,13 +32,43 @@ export class MainScene extends Phaser.Scene {
   }
 
   create() {
+    // input
+
     this.keys = this.input.keyboard.addKeys("W,A,S,D");
+ 
+
     this.score_text = this.add.text(20, 80, "Score: 0", { color: '#F2DC23' });
     this.hit_debug_text = this.add.text(10, 10, "", { color: '#F2DC23' });
     this.score = 0;
     this.player = this.physics.add.image(400, 300, 'player').setScale(.4).setCircle(38);
     this.player.setCollideWorldBounds(true);
 
+    // this.input.keyboard.createCursorKeys(); // Arrow Keys
+    this.input.mouse.requestPointerLock();
+    // When locked, you will have to use the movementX and movementY properties of the pointer
+    // (since a locked cursor's xy position does not update)
+    this.input.on('pointermove', function (pointer)
+    {
+      if (this.input.mouse.locked)
+            {
+                this.player.x += pointer.movementX;
+                this.player.y += pointer.movementY;
+
+                // Force the player to stay on screen
+                if (this.player.x < 0) {
+                  this.player.x = 0;
+                }
+                if (this.player.x > GAME_WIDTH) {
+                  this.player.x = GAME_WIDTH;
+                }
+                if (this.player.y < 0) {
+                  this.player.y = 0;
+                }
+                if (this.player.y > GAME_HEIGHT) {
+                  this.player.y = GAME_HEIGHT;
+                }
+            }
+        }, this);
 
     this.shapes = this.physics.add.group();
   
@@ -92,7 +125,7 @@ export class MainScene extends Phaser.Scene {
       }
     });
 
-    this.rose = this.sound.add('rose') as Phaser.Sound.HTML5AudioSound;
+    this.rose = this.sound.add('rose', {volume: .75}) as Phaser.Sound.HTML5AudioSound;
     this.rose.play();
 
   }
@@ -119,7 +152,6 @@ export class MainScene extends Phaser.Scene {
     } else if (this.keys.S.isDown) {
       this.player.setVelocityY(260);
     }
-
 
   }
 

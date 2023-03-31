@@ -9,23 +9,26 @@ import { GAME_HEIGHT, GAME_WIDTH, SCENES } from "../utils/constants";
 
 export class Preloader extends Phaser.Scene {
   keys: any;
-
     preload() {
         this.load.image('player', player_image);
         this.load.image('square', square_image);
         this.load.image('triangle', triangle_image);
         this.load.image('blue', blue_image);
         this.load.audio('rose', [ rose_song_ogg, rose_song_mp3]);
-        // this.canvas = this.sys.game.canvas;
       }
 
       create() {
-        this.keys = this.input.keyboard.addKeys("W,A,S,D");
-        this.add.text(GAME_WIDTH/2, GAME_HEIGHT/2, "~ Click to start. WASD to Play. ~", { color: '#F2DC23' });
+        this.add.text(GAME_WIDTH/2, GAME_HEIGHT/2, "~ Press R or Right Click to Start. WASD or Mouse to Play. ~", { color: '#F2DC23' });
+        this.keys = this.input.keyboard.addKeys("R");
         this.input.once('pointerdown', function () {
           this.scene.start(SCENES.MAIN_SCENE);
-
       }, this);
       }
+
+      update(time: number, delta: number): void {
+        if (this.keys.R.isDown) {
+            this.scene.start(SCENES.MAIN_SCENE);
+        }
+    }
 
 }

@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { MainScene } from './scenes/main-scene';
 import { GAME_HEIGHT, GAME_WIDTH } from './utils/constants';
 import { Preloader } from './scenes/preloader';
+import { GameOver } from './scenes/gameover-scene';
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
   title: '{Rose}',
@@ -14,7 +15,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
   // `as as Phaser.Types.Scenes.SettingsConfig[]` is required until https://github.com/photonstorm/phaser/pull/6235
   // scene: [menu()] as Phaser.Types.Scenes.SettingsConfig[],
   scene: [
-    Preloader, MainScene
+    Preloader, MainScene, GameOver
   ],
   input: {
     keyboard: true,
