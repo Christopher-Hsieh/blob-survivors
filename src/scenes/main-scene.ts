@@ -276,7 +276,7 @@ export class MainScene extends Phaser.Scene {
     );
     // Setup and Play song
     this.rose = this.sound.add("rose", {
-      volume: 0.75,
+      volume: 0.1,
     }) as Phaser.Sound.HTML5AudioSound;
     this.rose.play();
   }
