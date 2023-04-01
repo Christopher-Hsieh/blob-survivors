@@ -1,7 +1,7 @@
 {
-  "name": "blob-survivors",
+  "name": "rose",
   "version": "1.0.0",
-  "description": "It's Blob Survivors",
+  "description": "Rose",
   "main": "dist/index.ts",
   "scripts": {
     "dev": "vite",
@@ -10,14 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Christopher-Hsieh/blob-survivors.git"
+    "url": "git+https://github.com/Christopher-Hsieh/rose-remake.git"
   },
   "author": "Chris Hsieh",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Christopher-Hsieh/blob-survivors/issues"
-  },
-  "homepage": "https://github.com/Christopher-Hsieh/blob-survivors#readme",
   "devDependencies": {
     "@rollup/plugin-alias": "^4.0.3",
     "@rollup/plugin-commonjs": "^24.0.1",
