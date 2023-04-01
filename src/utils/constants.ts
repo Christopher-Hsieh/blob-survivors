@@ -2,7 +2,7 @@ export const BPM = 181;
 export const BPS = BPM / 60;
 export const BPMS = 1000 / BPS; 
 export const GAME_WIDTH = 1200;
-export const GAME_HEIGHT = 480;
+export const GAME_HEIGHT = 460;
 export const SPAWN_ZONE = GAME_WIDTH + 100;
 export const SCENES = {
     MAIN_SCENE: 'MainScene',
@@ -13,5 +13,7 @@ export const SCENES = {
 export const SHAPES = {
     TRIANGLE: 'triangle',
     SQUARE: 'square',
-    BLUE: 'blue'
+    BLUE: 'blue',
+    YELLOW: 'yellow',
+    ORANGE: 'orange'
   } as const;
