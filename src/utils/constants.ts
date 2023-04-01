@@ -2,7 +2,7 @@ export const BPM = 181;
 export const BPS = BPM / 60;
 export const BPMS = 1000 / BPS; 
 export const GAME_WIDTH = 1200;
-export const GAME_HEIGHT = 460;
+export const GAME_HEIGHT = 360;
 export const SPAWN_ZONE = GAME_WIDTH + 100;
 export const SCENES = {
     MAIN_SCENE: 'MainScene',
