@@ -23,9 +23,7 @@ Play it now at [christopher-hsieh.github.io/rose-remake](https://christopher-hsi
 | `yarn build` | Builds code bundle with production settings  |
 | `yarn serve` | Run a web server to serve built code bundle |
 
-## Roadmap
-- pointerlock https://labs.phaser.io/view.html?src=src\3.60\input\mouse\pointer%20lock.js
-- Leaderboards
+
 
 ## Acknowledgements
 
@@ -33,7 +31,15 @@ Play it now at [christopher-hsieh.github.io/rose-remake](https://christopher-hsi
  - [cornandbeans](https://www.newgrounds.com/audio/listen/65711) Author of the main soundtrack {Rose}.
  - [phaser3-rollup-typescript](https://github.com/Christopher-Hsieh/phaser3-rollup-typescript) Original template used as a starter for this project.
 
+## Roadmap
+- Leaderboards
+- Infinite Loop
+- Better graphics for player object
+- Better Start Game end Game graphics
+
 ## Changelog
-- Restart button, added game over scene to control it
-- Volume reduced
+- Refactor. Also, less objects, but they're faster.
+- Make spawning more dynamic.
+- Restart button, added game over scene to control it.
+- Volume reduced.
 - Mouse control through pointerlock!
