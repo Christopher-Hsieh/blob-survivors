@@ -3,12 +3,10 @@ import Phaser from "phaser";
 import {
   BPMS,
   GAME_HEIGHT,
-  GAME_WIDTH,
   SCENES,
   SHAPES,
   SPAWN_ZONE,
 } from "../utils/constants";
-import { Blue } from "../game-objects/blue";
 import { setupMouseControl } from "../utils/input";
 
 export class MainScene extends Phaser.Scene {
@@ -21,17 +19,10 @@ export class MainScene extends Phaser.Scene {
   canvas: HTMLCanvasElement;
   shapes: Phaser.Physics.Arcade.Group;
   rose: Phaser.Sound.HTML5AudioSound;
-  x: number;
-  tri_one_group: Phaser.GameObjects.Group;
-  tri_two_group: Phaser.GameObjects.Group;
-  tri_three_group: Phaser.GameObjects.Group;
+  triangles_group: Phaser.GameObjects.Group;
   squares_group: Phaser.GameObjects.Group;
-  squares_group_two: Phaser.GameObjects.Group;
   blue_group: Phaser.GameObjects.Group;
   yel_group: Phaser.GameObjects.Group;
-  oj_group: Phaser.GameObjects.Group;
-  square_timer: Phaser.Time.TimerEvent;
-  time_text: Phaser.GameObjects.Text;
 
   constructor() {
     super(SCENES.MAIN_SCENE);
@@ -55,27 +46,12 @@ export class MainScene extends Phaser.Scene {
     setupMouseControl(this.input, this.player);
 
     // Setup triangles
-    this.tri_one_group = this.physics.add.group({
+    this.triangles_group = this.physics.add.group({
       defaultKey: SHAPES.TRIANGLE,
       createCallback: function (triangle: Phaser.Physics.Arcade.Sprite) {
         triangle.setScale(0.4).setSize(50, 50);
+        triangle.setVelocityX(-200);
       },
-    });
-
-    this.tri_two_group = this.physics.add.group({
-      defaultKey: SHAPES.TRIANGLE,
-      createCallback: function (triangle: Phaser.Physics.Arcade.Sprite) {
-        triangle.setScale(0.4).setSize(50, 50);
-      },
-    });
-
-    // Spawn first group on start
-    this.time.addEvent({
-      delay: 600,
-      startAt: 500,
-      repeat: 11,
-      callbackScope: this,
-      callback: this.addTriangleOne,
     });
 
     // Setup the Square's group
@@ -84,18 +60,71 @@ export class MainScene extends Phaser.Scene {
       createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
         square.setScale(0.4).setSize(60, 60);
         square.setAngle(Phaser.Math.Between(-26, 26)); // Angle in degrees, slightly random
+        square.setVelocity(Phaser.Math.Between(-425, -250), 0); // Setup dynamic velocity
+      },
+    });
+
+    // Setup Blue's group
+    this.blue_group = this.physics.add.group({
+      defaultKey: SHAPES.BLUE,
+      createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
+        square.setScale(0.4).setSize(60, 60);
+        square.setAngle(Phaser.Math.Between(-26, 26)); // Angle in degrees, slightly random
         square.setVelocity(Phaser.Math.Between(-400, -200), 0); // Setup dynamic velocity
       },
     });
 
-    // Spawn Squares every beat after 6.8 seconds
+    this.yel_group = this.physics.add.group({
+      defaultKey: SHAPES.YELLOW,
+      createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
+        square.setScale(0.4).setSize(60, 60);
+        square.setAngle(Phaser.Math.Between(-10, 10)); // Angle in degrees, slightly random
+        square.setVelocity(Phaser.Math.Between(-800, -450), 0); // Setup dynamic velocity
+      },
+    });
+
+    // Attach repeat pulse animation
     this.time.addEvent({
       delay: 6800,
+      callbackScope: this,
+      callback: function() {
+        this.addPulseTween(111);
+      }
+    });
+    // Attach repeat pulse animation after drop
+    this.time.addEvent({
+      delay: 46000,
+      callbackScope: this,
+      callback: function() {
+        this.addPulseTween(-1);
+      }
+    });
+    // Spawn first group on start
+    this.time.addEvent({
+      delay: 600,
+      startAt: 550,
+      repeat: 10,
+      callbackScope: this,
+      callback: this.addTriangle,
+    });
+
+    // Animate first group of triangles for Intro sequence
+    this.time.addEvent({
+      delay: 620,
+      startAt: 450,
+      repeat: 10,
+      callbackScope: this,
+      callback: this.addTriangleJump,
+    });
+
+    // Spawn Squares .35 sec after 4 seconds
+    this.time.addEvent({
+      delay: 4000,
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
           delay: BPMS,
-          repeat: 96,
+          repeat: -1,
           callbackScope: this,
           callback: this.addSquare,
         });
@@ -109,23 +138,21 @@ export class MainScene extends Phaser.Scene {
       callback: function () {
         this.time.addEvent({
           delay: BPMS,
-          repeat: 75,
+          repeat: 23,
           callbackScope: this,
-          callback: this.addTriangleTwo,
+          callback: this.addTriangle,
+        });
+        // Animate triangles until blue spawns
+        this.time.addEvent({
+          delay: BPMS,
+          repeat: 26,
+          callbackScope: this,
+          callback: this.addTriangleJump,
         });
       },
     });
 
-    // Setup Blue's group
-    this.blue_group = this.physics.add.group({
-      defaultKey: SHAPES.BLUE,
-      createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
-        square.setScale(0.4).setSize(60, 60);
-        square.setAngle(Phaser.Math.Between(-26, 26)); // Angle in degrees, slightly random
-        square.setVelocity(Phaser.Math.Between(-400, -200), 0); // Setup dynamic velocity
-      },
-    });
-    // Spawn Blue at 30 second claps
+    // Spawn Blue at 28 second claps
     this.time.addEvent({
       delay: 28000,
       callbackScope: this,
@@ -139,43 +166,50 @@ export class MainScene extends Phaser.Scene {
         });
       },
     });
-    // Second round of squares
-    this.squares_group_two = this.physics.add.group({
-      defaultKey: SHAPES.SQUARE,
-      createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
-        square.setScale(0.4).setSize(60, 60);
-        square.setAngle(Phaser.Math.Between(-26, 26)); // Angle in degrees, slightly random
-        square.setVelocity(Phaser.Math.Between(-450, -250), 0); // Setup dynamic velocity
-      },
-    });
+
+    // Spawn Triangles briefly at 36 seconds
     this.time.addEvent({
-      delay: 48000,
+      delay: 36500,
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
           delay: BPMS,
-          repeat: -1,
+          repeat: 12,
           callbackScope: this,
-          callback: this.addSquare_two,
+          callback: this.addTriangle,
+        });
+        // Animate triangles until blue spawns
+        this.time.addEvent({
+          delay: BPMS,
+          repeat: 16,
+          callbackScope: this,
+          callback: this.addTriangleJump,
         });
       },
     });
-    // Second round triangles
+
+    // Triangles after drop
     this.time.addEvent({
-      delay: 46500,
+      delay: 48500,
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
-          delay: 1800,
+          delay: 1700,
           callbackScope: this,
-          repeat: -1,
+          repeat: 5,
           callback: function () {
             this.time.addEvent({
-              delay: 500,
-              // startAt: 500,
+              delay: BPMS,
               repeat: 3,
               callbackScope: this,
-              callback: this.addTriangleOne,
+              callback: this.addTriangle,
+            });
+            // Animate triangles until blue spawns
+            this.time.addEvent({
+              delay: 330,
+              repeat: 3,
+              callbackScope: this,
+              callback: this.addTriangleJump,
             });
           },
         });
@@ -188,92 +222,22 @@ export class MainScene extends Phaser.Scene {
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
-          delay: 275,
-          loop: true,
+          delay: BPMS,
+          repeat: 75,
           callbackScope: this,
           callback: this.addYellow,
         });
       },
     });
-    this.yel_group = this.physics.add.group({
-      defaultKey: SHAPES.YELLOW,
-      createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
-        square.setScale(0.4).setSize(60, 60);
-        square.setAngle(Phaser.Math.Between(-10, 10)); // Angle in degrees, slightly random
-        square.setVelocity(Phaser.Math.Between(-800, -450), 0); // Setup dynamic velocity
-      },
-    });
-
-    // Still Alive. Kill them.
-    this.time.addEvent({
-      delay: 51000,
-      callbackScope: this,
-      callback: function () {
-        this.time.addEvent({
-          delay: 400,
-          loop: true,
-          callbackScope: this,
-          callback: this.addOJ,
-        });
-      },
-    });
-    this.oj_group = this.physics.add.group({
-      defaultKey: SHAPES.ORANGE,
-      createCallback: function (circle: Phaser.Physics.Arcade.Sprite) {
-        circle.setScale(0.4).setCircle(38);
-      },
-    });
 
     // Setup Colliders
-    this.physics.add.collider(
-      this.player,
-      this.tri_one_group,
-      this.hitShape,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
-      this.tri_two_group,
-      this.hitShape,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
+    this.setupColliders([
+      this.triangles_group,
       this.squares_group,
-      this.hitShape,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
-      this.squares_group_two,
-      this.hitShape,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
       this.blue_group,
-      this.hitShape,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
       this.yel_group,
-      this.hitShape,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
-      this.oj_group,
-      this.hitShape,
-      null,
-      this
-    );
+    ]);
+
     // Setup and Play song
     this.rose = this.sound.add("rose", {
       volume: 0.1,
@@ -282,49 +246,10 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    Phaser.Actions.Angle(this.tri_one_group.getChildren(), -0.25);
-    Phaser.Actions.Angle(this.tri_two_group.getChildren(), -0.25);
-    Phaser.Actions.IncX(this.tri_one_group.getChildren(), -4);
-    Phaser.Actions.IncX(this.tri_two_group.getChildren(), -4);
-
-    for (const child of this.tri_one_group.getChildren()) {
-      //@ts-ignore
-      if (child.x < -50 && child.active) {
-        this.tri_one_group.kill(child);
-        this.incrementScore(50);
-      }
-    }
-
-    for (const child of this.tri_two_group.getChildren()) {
-      //@ts-ignore
-      if (child.x < -50 && child.active) {
-        this.tri_two_group.kill(child);
-        this.incrementScore(200);
-      }
-    }
-
-    for (const child of this.squares_group.getChildren()) {
-      //@ts-ignore
-      if (child.x < -50 && child.active) {
-        child.destroy();
-        this.incrementScore(100);
-      }
-    }
-    for (const child of this.squares_group_two.getChildren()) {
-      //@ts-ignore
-      if (child.x < -50 && child.active) {
-        child.destroy();
-        this.incrementScore(100);
-      }
-    }
-
-    for (const child of this.blue_group.getChildren()) {
-      //@ts-ignore
-      if (child.x < -50 && child.active) {
-        child.destroy();
-        this.incrementScore(250);
-      }
-    }
+    this.incrementScoreAndKill(100, this.triangles_group);
+    this.incrementScoreAndKill(50, this.squares_group);
+    this.incrementScoreAndDestroy(250, this.blue_group.getChildren());
+    this.incrementScoreAndDestroy(275, this.yel_group.getChildren());
 
     this.player.setVelocity(0);
     if (this.keys.A.isDown) {
@@ -340,6 +265,27 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
+  incrementScoreAndKill(num: number, group: Phaser.GameObjects.Group) {
+    for (const child of group.getChildren()) {
+      //@ts-ignore
+      if (child.x < -50 && child.active) {
+        group.kill(child);
+        this.incrementScore(num);
+      }
+    }
+  }
+  incrementScoreAndDestroy(
+    num: number,
+    group: Phaser.GameObjects.GameObject[]
+  ) {
+    for (const child of group) {
+      //@ts-ignore
+      if (child.x < -50 && child.active) {
+        child.destroy();
+        this.incrementScore(num);
+      }
+    }
+  }
   incrementScore(num: number) {
     this.score = this.score + num;
     this.score_text.setText("Score: " + this.score.toString());
@@ -348,82 +294,83 @@ export class MainScene extends Phaser.Scene {
     obj.setActive(true).setVisible(true);
   }
 
-  addTriangleOne() {
-    // Find first inactive sprite in group or add new sprite, and set position
-    const triangle = this.tri_one_group.get(
-      SPAWN_ZONE,
-      Phaser.Math.Between(GAME_HEIGHT / 7, (GAME_HEIGHT * 6) / 7)
-    );
-
-    // None free or already at maximum amount of sprites in group
-    if (!triangle) return;
-
-    this.activateObj(triangle);
-
-    const children = this.tri_one_group.getChildren();
-    this.tweens.add({
-      targets: children,
-      props: {
-        x: {
-          getEnd: function (target, key, value) {
-            return target.x - 120;
-          },
-
-          getStart: function (target, key, value) {
-            return target.x;
+  // Animating all the blocks might lag us out.
+  addPulseTween(repeat_count: number) {
+    this.time.addEvent({
+      delay: BPMS,
+      repeat: repeat_count,
+      callbackScope: this,
+      callback: function () {
+        this.tweens.add({
+          targets: this.squares_group.getChildren(),
+          props: {
+            scaleX: 0.475,
+            scaleY: 0.475,
           },
           ease: "Sine.easeInOut",
-        },
-        angle: {
-          getEnd: function (target, key, value) {
-            return target.angle - 100;
-          },
-
-          getStart: function (target, key, value) {
-            return target.angle;
-          },
-        },
+          duration: 40,
+          yoyo: true,
+        });
       },
-      duration: 250,
+    });
+    this.time.addEvent({
+      delay: BPMS,
+      repeat: repeat_count,
+      callbackScope: this,
+      callback: function () {
+        this.tweens.add({
+          targets: this.blue_group.getChildren(),
+          props: {
+            scaleX: 0.475,
+            scaleY: 0.475,
+          },
+          ease: "Sine.easeInOut",
+          duration: 40,
+          yoyo: true,
+        });
+      },
     });
   }
 
-  addTriangleTwo() {
-    // Find first inactive sprite in group or add new sprite, and set position
-    const triangle = this.tri_two_group.get(
-      SPAWN_ZONE,
-      Phaser.Math.Between(GAME_HEIGHT / 8, (GAME_HEIGHT * 7) / 8)
-    );
-
-    // None free or already at maximum amount of sprites in group
-    if (!triangle) return;
-    this.activateObj(triangle);
-    const children = this.tri_two_group.getChildren();
+  addTriangleJump() {
+    const children = this.triangles_group.getChildren();
     this.tweens.add({
       targets: children,
       props: {
         x: {
-          getEnd: function (target, key, value) {
-            return target.x - 160;
+          getEnd: function (target) {
+            return target.x - 180;
           },
 
-          getStart: function (target, key, value) {
+          getStart: function (target) {
             return target.x;
           },
           ease: "Sine.easeInOut",
         },
         angle: {
-          getEnd: function (target, key, value) {
-            return target.angle - 140;
+          getEnd: function (target) {
+            return target.angle - 120;
           },
 
-          getStart: function (target, key, value) {
+          getStart: function (target) {
             return target.angle;
           },
         },
       },
       duration: 300,
     });
+  }
+  addTriangle() {
+    // Find first inactive sprite in group or add new sprite, and set position
+    const triangle = this.triangles_group.get(
+      SPAWN_ZONE,
+      Phaser.Math.Between(GAME_HEIGHT / 10, (GAME_HEIGHT * 9) / 10)
+    );
+
+    // None free or already at maximum amount of sprites in group
+    if (!triangle) return;
+
+    this.activateObj(triangle);
   }
 
   addSquare() {
@@ -437,42 +384,8 @@ export class MainScene extends Phaser.Scene {
     if (!square) return;
 
     this.activateObj(square);
-    this.tweens.add({
-      targets: square,
-      props: {
-        scaleX: 0.5,
-        scaleY: 0.5,
-      },
-      ease: "Linear",
-      duration: BPMS / 3,
-      repeat: -1,
-      repeatDelay: (BPMS * 2) / 3,
-    });
   }
-  addSquare_two() {
-    if (Math.random() < 0.3) return;
-    // Find first inactive sprite in group or add new sprite, and set position
-    const square = this.squares_group_two.get(
-      SPAWN_ZONE,
-      Phaser.Math.Between(0, GAME_HEIGHT)
-    );
 
-    // None free or already at maximum amount of sprites in group
-    if (!square) return;
-
-    this.activateObj(square);
-    this.tweens.add({
-      targets: square,
-      props: {
-        scaleX: 0.52,
-        scaleY: 0.52,
-      },
-      ease: "Linear",
-      duration: BPMS / 3,
-      repeat: -1,
-      repeatDelay: (BPMS * 2) / 3,
-    });
-  }
   addYellow() {
     // Find first inactive sprite in group or add new sprite, and set position
     const square = this.yel_group.get(
@@ -494,75 +407,43 @@ export class MainScene extends Phaser.Scene {
       duration: Phaser.Math.Between(2000, 3000),
     });
   }
-  addOJ() {
-    // Find first inactive sprite in group or add new sprite, and set position
-    const square = this.oj_group.get(
-      SPAWN_ZONE,
-      Phaser.Math.Between(0, GAME_HEIGHT)
-    );
 
-    // None free or already at maximum amount of sprites in group
-    if (!square) return;
-
-    this.activateObj(square);
-    this.tweens.add({
-      targets: square,
-      ease: "Linear",
-      props: {
-        y: {
-          getEnd: function (target, key, value) {
-            return target.y + Phaser.Math.Between(-150, 150);
-          },
-
-          getStart: function (target, key, value) {
-            return target.y;
-          },
-        },
-        x: {
-          getEnd: function (target, key, value) {
-            return target.x - 400;
-          },
-
-          getStart: function (target, key, value) {
-            return target.x;
-          },
-        },
-      },
-      repeat: -1,
-    });
-  }
   addBlue() {
     // Find first inactive sprite in group or add new sprite, and set position
-    const height = Phaser.Math.Between(GAME_HEIGHT / 5, (GAME_HEIGHT * 4) / 5);
     const square_1 = this.blue_group.get(
       SPAWN_ZONE,
-      Phaser.Math.Between(0, GAME_HEIGHT / 3)
+      Phaser.Math.Between(0, GAME_HEIGHT / 4)
     );
     const square_2 = this.blue_group.get(
       SPAWN_ZONE,
-      Phaser.Math.Between(GAME_HEIGHT / 3, (GAME_HEIGHT * 2) / 3)
+      Phaser.Math.Between(GAME_HEIGHT / 4, (GAME_HEIGHT / 2))
     );
     const square_3 = this.blue_group.get(
       SPAWN_ZONE,
-      Phaser.Math.Between((GAME_HEIGHT * 2) / 3, GAME_HEIGHT)
+      Phaser.Math.Between(GAME_HEIGHT / 2, (GAME_HEIGHT * 3 / 4))
+    );
+    const square_4 = this.blue_group.get(
+      SPAWN_ZONE,
+      Phaser.Math.Between((GAME_HEIGHT * 3) / 4, GAME_HEIGHT)
     );
 
     // None free or already at maximum amount of sprites in group
-    if (!square_1 || !square_2 || !square_3) return;
+    if (!square_1 || !square_2 || !square_3 || !square_4) return;
 
     this.activateObj(square_1);
     this.activateObj(square_2);
     this.activateObj(square_3);
+    this.activateObj(square_4);
     this.tweens.add({
-      targets: [square_1, square_2, square_3],
+      targets: [square_1, square_2, square_3, square_4],
       props: {
         x: { value: -100, duration: 2500, ease: "Quad.easeIn" },
         y: {
-          getEnd: function (target, key, value) {
+          getEnd: function (target) {
             return target.y + Phaser.Math.Between(-300, 300);
           },
 
-          getStart: function (target, key, value) {
+          getStart: function (target) {
             return target.y;
           },
           duration: 2500,
@@ -570,15 +451,6 @@ export class MainScene extends Phaser.Scene {
         },
       },
     });
-  }
-  spawnBlue() {
-    const square = new Blue(
-      this,
-      SPAWN_ZONE,
-      Phaser.Math.Between(GAME_HEIGHT / 12, (GAME_HEIGHT * 11) / 12)
-    );
-    this.shapes.add(square);
-    square.spawn();
   }
 
   hitShape() {
@@ -588,5 +460,17 @@ export class MainScene extends Phaser.Scene {
     this.input.mouse.releasePointerLock();
     this.hit_debug_text.setText("- Press r to retry. -");
     this.scene.launch(SCENES.GAME_OVER);
+  }
+
+  setupColliders(groups: Phaser.GameObjects.Group[]) {
+    for (var i = 0; i < groups.length; i++) {
+      this.physics.add.collider(
+        this.player,
+        groups[i],
+        this.hitShape,
+        null,
+        this
+      );
+    }
   }
 }
