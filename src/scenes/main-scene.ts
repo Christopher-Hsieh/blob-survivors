@@ -526,6 +526,7 @@ export class MainScene extends Phaser.Scene {
     this.scene.pause();
     this.input.mouse.releasePointerLock();
     this.hit_debug_text.setText("- Press r to retry. -");
+    this.score = 0;
     this.scene.launch(SCENES.GAME_OVER);
   }
 
