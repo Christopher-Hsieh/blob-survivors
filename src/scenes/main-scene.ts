@@ -521,12 +521,12 @@ export class MainScene extends Phaser.Scene {
   }
 
   hitShape() {
-    // this.rose.stop();
-    // this.physics.pause();
-    // this.scene.pause();
-    // this.input.mouse.releasePointerLock();
-    // this.hit_debug_text.setText("- Press r to retry. -");
-    // this.scene.launch(SCENES.GAME_OVER);
+    this.rose.stop();
+    this.physics.pause();
+    this.scene.pause();
+    this.input.mouse.releasePointerLock();
+    this.hit_debug_text.setText("- Press r to retry. -");
+    this.scene.launch(SCENES.GAME_OVER);
   }
 
   setupColliders(groups: Phaser.GameObjects.Group[]) {
