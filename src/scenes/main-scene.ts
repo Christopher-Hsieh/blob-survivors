@@ -50,7 +50,7 @@ export class MainScene extends Phaser.Scene {
       defaultKey: SHAPES.TRIANGLE,
       createCallback: function (triangle: Phaser.Physics.Arcade.Sprite) {
         triangle.setScale(0.4).setSize(50, 50);
-        triangle.setVelocityX(-200);
+        triangle.setVelocityX(-220);
       },
     });
 
@@ -60,7 +60,7 @@ export class MainScene extends Phaser.Scene {
       createCallback: function (square: Phaser.Physics.Arcade.Sprite) {
         square.setScale(0.4).setSize(60, 60);
         square.setAngle(Phaser.Math.Between(-26, 26)); // Angle in degrees, slightly random
-        square.setVelocity(Phaser.Math.Between(-450, -200), 0); // Setup dynamic velocity
+        square.setVelocity(Phaser.Math.Between(-475, -220), 0); // Setup dynamic velocity
       },
     });
 
@@ -112,19 +112,19 @@ export class MainScene extends Phaser.Scene {
     this.time.addEvent({
       delay: 620,
       startAt: 450,
-      repeat: 10,
+      repeat: 11,
       callbackScope: this,
       callback: this.addTriangleJump,
     });
 
-    // Spawn Squares .3 sec after 4 seconds
+    // Spawn Squares .35 sec after 4 seconds
     this.time.addEvent({
       delay: 4000,
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
-          delay: BPMS,
-          repeat: 182,
+          delay: 360,
+          repeat: 168,
           callbackScope: this,
           callback: this.addSquare,
         });
@@ -167,9 +167,9 @@ export class MainScene extends Phaser.Scene {
       },
     });
 
-    // Spawn Triangles briefly at 34.5 seconds
+    // Spawn Triangles briefly at 36.5 seconds
     this.time.addEvent({
-      delay: 34500,
+      delay: 38500,
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
@@ -181,7 +181,7 @@ export class MainScene extends Phaser.Scene {
         // Animate triangles until blue spawns
         this.time.addEvent({
           delay: BPMS,
-          repeat: 16,
+          repeat: 18,
           callbackScope: this,
           callback: this.addTriangleJump,
         });
@@ -216,7 +216,7 @@ export class MainScene extends Phaser.Scene {
       callback: function () {
         this.time.addEvent({
           delay: BPMS,
-          repeat: 50,
+          repeat: 45,
           callbackScope: this,
           callback: this.addYellow,
         });
@@ -225,12 +225,12 @@ export class MainScene extends Phaser.Scene {
 
     // Finale. Lots of triangles
     this.time.addEvent({
-      delay: 68000,
+      delay: 66000,
       callbackScope: this,
       callback: function () {
         this.time.addEvent({
           delay: 150,
-          repeat: 50,
+          repeat: 40,
           callbackScope: this,
           callback: this.addSpinningTriangle,
         });
@@ -246,7 +246,7 @@ export class MainScene extends Phaser.Scene {
     ]);
 
     this.time.addEvent({
-      delay: 79000,
+      delay: 75500,
       callbackScope: this,
       callback: this.loopGame
     });
@@ -261,6 +261,7 @@ export class MainScene extends Phaser.Scene {
   loopGame() {
     // TODO increase Velocity overall.
     // TODO fade music.
+    this.rose.stop();
     this.scene.restart({score: this.score});
   }
 
@@ -339,6 +340,23 @@ export class MainScene extends Phaser.Scene {
       callback: function () {
         this.tweens.add({
           targets: this.blue_group.getChildren(),
+          props: {
+            scaleX: 0.475,
+            scaleY: 0.475,
+          },
+          ease: "Sine.easeInOut",
+          duration: 40,
+          yoyo: true,
+        });
+      },
+    });
+    this.time.addEvent({
+      delay: BPMS,
+      repeat: repeat_count,
+      callbackScope: this,
+      callback: function () {
+        this.tweens.add({
+          targets: this.yel_group.getChildren(),
           props: {
             scaleX: 0.475,
             scaleY: 0.475,
@@ -503,12 +521,12 @@ export class MainScene extends Phaser.Scene {
   }
 
   hitShape() {
-    this.rose.stop();
-    this.physics.pause();
-    this.scene.pause();
-    this.input.mouse.releasePointerLock();
-    this.hit_debug_text.setText("- Press r to retry. -");
-    this.scene.launch(SCENES.GAME_OVER);
+    // this.rose.stop();
+    // this.physics.pause();
+    // this.scene.pause();
+    // this.input.mouse.releasePointerLock();
+    // this.hit_debug_text.setText("- Press r to retry. -");
+    // this.scene.launch(SCENES.GAME_OVER);
   }
 
   setupColliders(groups: Phaser.GameObjects.Group[]) {
