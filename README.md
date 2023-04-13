@@ -38,6 +38,14 @@ Play it now at [christopher-hsieh.github.io/rose-remake](https://christopher-hsi
 - Better Start Game end Game graphics
 
 ## Changelog
+v1.1
+- Player tint set on click
+- click to restart
+- Fonts and move text
+- favicon
+- intro song
+
+v1.0
 - Refactor. Also, less objects, but they're faster.
 - Make spawning more dynamic.
 - Restart button, added game over scene to control it.

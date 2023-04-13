@@ -23,6 +23,7 @@ export class MainScene extends Phaser.Scene {
   squares_group: Phaser.GameObjects.Group;
   blue_group: Phaser.GameObjects.Group;
   yel_group: Phaser.GameObjects.Group;
+  hsv: Phaser.Types.Display.ColorObject[];
 
   constructor(score: number) {
     super(SCENES.MAIN_SCENE);
@@ -31,8 +32,20 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     // Setup scoreboard
-    this.score_text = this.add.text(20, 80, "Score: " + this.score.toString(), { color: "#F2DC23" });
-    this.hit_debug_text = this.add.text(10, 10, "", { color: "#F2DC23" });
+    this.score_text = this.add
+      .text(800, 20, "Score: " + this.score.toString(), {
+        color: "#BDBEC7",
+        fontFamily: "VerminVerile",
+        fontSize: "22px",
+      })
+      .setAlpha(0.7);
+    this.hit_debug_text = this.add
+      .text(280, 120, " ", {
+        color: "#BDBEC7",
+        fontFamily: "VerminVerile",
+        fontSize: "32px",
+      })
+      .setAlpha(0.9);
 
     // Setup Player
     this.player = this.physics.add
@@ -40,6 +53,18 @@ export class MainScene extends Phaser.Scene {
       .setScale(0.4)
       .setCircle(38);
     this.player.setCollideWorldBounds(true);
+
+    // Setup fun color change on click
+    this.hsv = Phaser.Display.Color.HSVColorWheel();
+    this.input.on(
+      "pointerdown",
+      function () {
+        this.player.setTint(
+          this.hsv[Phaser.Math.Between(0, this.hsv.length)].color
+        );
+      },
+      this
+    );
 
     // Setup Input
     this.keys = this.input.keyboard.addKeys("W,A,S,D");
@@ -87,17 +112,17 @@ export class MainScene extends Phaser.Scene {
     this.time.addEvent({
       delay: 6800,
       callbackScope: this,
-      callback: function() {
+      callback: function () {
         this.addPulseTween(111);
-      }
+      },
     });
     // Attach repeat pulse animation after drop
     this.time.addEvent({
       delay: 46000,
       callbackScope: this,
-      callback: function() {
+      callback: function () {
         this.addPulseTween(-1);
-      }
+      },
     });
     // Spawn first group on start
     this.time.addEvent({
@@ -124,7 +149,7 @@ export class MainScene extends Phaser.Scene {
       callback: function () {
         this.time.addEvent({
           delay: 360,
-          repeat: 168,
+          repeat: 172,
           callbackScope: this,
           callback: this.addSquare,
         });
@@ -192,21 +217,21 @@ export class MainScene extends Phaser.Scene {
     this.time.addEvent({
       delay: 49500,
       callbackScope: this,
-          callback: function () {
-            this.time.addEvent({
-              delay: BPMS,
-              repeat: 12,
-              callbackScope: this,
-              callback: this.addTriangle,
-            });
-            // Animate triangles until blue spawns
-            this.time.addEvent({
-              delay: BPMS,
-              repeat: 20,
-              callbackScope: this,
-              callback: this.addTriangleJump,
-            });
-          },
+      callback: function () {
+        this.time.addEvent({
+          delay: BPMS,
+          repeat: 12,
+          callbackScope: this,
+          callback: this.addTriangle,
+        });
+        // Animate triangles until blue spawns
+        this.time.addEvent({
+          delay: BPMS,
+          repeat: 20,
+          callbackScope: this,
+          callback: this.addTriangleJump,
+        });
+      },
     });
 
     // Go nuts w/ yellow at 46 sec drop
@@ -248,12 +273,12 @@ export class MainScene extends Phaser.Scene {
     this.time.addEvent({
       delay: 75500,
       callbackScope: this,
-      callback: this.loopGame
+      callback: this.loopGame,
     });
 
     // Setup and Play song
     this.rose = this.sound.add("rose", {
-      volume: 0.1,
+      volume: 0.14,
     }) as Phaser.Sound.HTML5AudioSound;
     this.rose.play();
   }
@@ -262,7 +287,7 @@ export class MainScene extends Phaser.Scene {
     // TODO increase Velocity overall.
     // TODO fade music.
     this.rose.stop();
-    this.scene.restart({score: this.score});
+    this.scene.restart({ score: this.score });
   }
 
   update(time: number, delta: number): void {
@@ -457,7 +482,7 @@ export class MainScene extends Phaser.Scene {
     // Find first inactive sprite in group or add new sprite, and set position
     const square = this.yel_group.get(
       SPAWN_ZONE,
-      Phaser.Math.Between(0, GAME_HEIGHT)
+      Phaser.Math.Between(20, (GAME_HEIGHT * 14) / 15)
     );
 
     // None free or already at maximum amount of sprites in group
@@ -466,12 +491,12 @@ export class MainScene extends Phaser.Scene {
     this.activateObj(square);
     this.tweens.add({
       targets: square,
-      ease: "Power1.easeIn",
+      ease: "Power2.easeIn",
       props: {
-        y: Phaser.Math.Between(0, GAME_HEIGHT),
-        x: -200,
+        y: Phaser.Math.Between(20, (GAME_HEIGHT * 14) / 15),
+        x: -150,
       },
-      duration: Phaser.Math.Between(2000, 3000),
+      duration: Phaser.Math.Between(1400, 2250),
     });
   }
 
@@ -483,11 +508,11 @@ export class MainScene extends Phaser.Scene {
     );
     const square_2 = this.blue_group.get(
       SPAWN_ZONE,
-      Phaser.Math.Between(GAME_HEIGHT / 4, (GAME_HEIGHT / 2))
+      Phaser.Math.Between(GAME_HEIGHT / 4, GAME_HEIGHT / 2)
     );
     const square_3 = this.blue_group.get(
       SPAWN_ZONE,
-      Phaser.Math.Between(GAME_HEIGHT / 2, (GAME_HEIGHT * 3 / 4))
+      Phaser.Math.Between(GAME_HEIGHT / 2, (GAME_HEIGHT * 3) / 4)
     );
     const square_4 = this.blue_group.get(
       SPAWN_ZONE,
@@ -525,7 +550,7 @@ export class MainScene extends Phaser.Scene {
     this.physics.pause();
     this.scene.pause();
     this.input.mouse.releasePointerLock();
-    this.hit_debug_text.setText("- Press r to retry. -");
+    this.hit_debug_text.setText("Click to retry or press r");
     this.score = 0;
     this.scene.launch(SCENES.GAME_OVER);
   }
