@@ -24,6 +24,7 @@ export class MainScene extends Phaser.Scene {
   blue_group: Phaser.GameObjects.Group;
   yel_group: Phaser.GameObjects.Group;
   hsv: Phaser.Types.Display.ColorObject[];
+  emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
   constructor(score: number) {
     super(SCENES.MAIN_SCENE);
@@ -54,14 +55,23 @@ export class MainScene extends Phaser.Scene {
       .setCircle(38);
     this.player.setCollideWorldBounds(true);
 
+    this.emitter = this.add.particles(0, 0, "player", {
+      lifespan: 100,
+      alpha: { start: 0.5, end: 0 },
+      scale: 0.39,
+      //@ts-ignore
+      deathZone: new Phaser.Geom.Rectangle(0, 0, 1, 1),
+    });
+
     // Setup fun color change on click
     this.hsv = Phaser.Display.Color.HSVColorWheel();
     this.input.on(
       "pointerdown",
       function () {
-        this.player.setTint(
-          this.hsv[Phaser.Math.Between(0, this.hsv.length)].color
-        );
+        const randomTint =
+          this.hsv[Phaser.Math.Between(0, this.hsv.length)].color;
+        this.player.setTint(randomTint);
+        this.emitter.setParticleTint(randomTint);
       },
       this
     );
@@ -295,6 +305,8 @@ export class MainScene extends Phaser.Scene {
     this.incrementScoreAndKill(50, this.squares_group);
     this.incrementScoreAndDestroy(250, this.blue_group.getChildren());
     this.incrementScoreAndDestroy(275, this.yel_group.getChildren());
+
+    this.emitter.emitParticleAt(this.player.x, this.player.y, 1);
 
     this.player.setVelocity(0);
     if (this.keys.A.isDown) {

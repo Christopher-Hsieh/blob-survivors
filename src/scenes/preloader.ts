@@ -33,7 +33,7 @@ export class Preloader extends Phaser.Scene {
 
       create() {
         this.add.text(450,100,"◻ⵔ△", { color: '#5F616E', fontSize: "40px" });
-        this.add.text(550,120,"v1.1", { color: '#5F616E', fontSize: "14px" });
+        this.add.text(550,120,"v1.2", { color: '#5F616E', fontSize: "14px" });
 
         this.add.text(200, 150, "~ Click To Play ~", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "52px" });
         this.add.text(255, 210, "Controls: Mouse / WASD", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "28px" });

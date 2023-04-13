@@ -38,6 +38,9 @@ Play it now at [christopher-hsieh.github.io/rose-remake](https://christopher-hsi
 - Better Start Game end Game graphics
 
 ## Changelog
+v1.2
+- Particle anims for player
+
 v1.1
 - Player tint set on click
 - click to restart
