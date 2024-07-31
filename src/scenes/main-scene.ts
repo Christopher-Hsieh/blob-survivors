@@ -1,13 +1,13 @@
 import Phaser from "phaser";
-
 import {
   BPMS,
   GAME_HEIGHT,
+  GAME_WIDTH,
   SCENES,
   SHAPES,
   SPAWN_ZONE,
 } from "../utils/constants";
-import { setupMouseControl } from "../utils/input";
+import { handleTouchControl, setupMouseControl } from "../utils/input";
 
 export class MainScene extends Phaser.Scene {
   keys: any;
@@ -26,12 +26,22 @@ export class MainScene extends Phaser.Scene {
   hsv: Phaser.Types.Display.ColorObject[];
   emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
+  parent;
+  sizer;
+
   constructor(score: number) {
     super(SCENES.MAIN_SCENE);
     this.score = score || 0;
   }
 
   create() {
+    const width = this.scale.gameSize.width;
+    const height = this.scale.gameSize.height;
+    this.parent = new Phaser.Structs.Size(width, height);
+    this.sizer = new Phaser.Structs.Size(GAME_WIDTH, GAME_HEIGHT, Phaser.Structs.Size.FIT, this.parent);
+    this.parent.setSize(width, height);
+    this.sizer.setSize(width, height);
+
     // Setup scoreboard
     this.score_text = this.add
       .text(800, 20, "Score: " + this.score.toString(), {
@@ -307,6 +317,10 @@ export class MainScene extends Phaser.Scene {
     this.incrementScoreAndDestroy(275, this.yel_group.getChildren());
 
     this.emitter.emitParticleAt(this.player.x, this.player.y, 1);
+
+    if (this.input.pointer1.isDown) {
+          handleTouchControl(this.input, this.player);
+      }
 
     this.player.setVelocity(0);
     if (this.keys.A.isDown) {

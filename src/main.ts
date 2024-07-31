@@ -1,5 +1,3 @@
-// <reference types="Phaser" path=”../node_modules/phaser/types/phaser.d.ts”/>
-import Phaser from 'phaser';
 import { MainScene } from './scenes/main-scene';
 import { GAME_HEIGHT, GAME_WIDTH } from './utils/constants';
 import { Preloader } from './scenes/preloader';
@@ -37,12 +35,12 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#1B1C22',
   render: { pixelArt: false, antialias: true },
   scale: {
-    // mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     // `fullscreenTarget` must be defined for phones to not have
     // a small margin during fullscreen.
-    fullscreenTarget: 'app',
-    expandParent: false,
+    // fullscreenTarget: 'body',
+    expandParent: true,
   },
 };
 
