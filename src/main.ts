@@ -41,6 +41,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
     // a small margin during fullscreen.
     fullscreenTarget: 'body',
     expandParent: false,
+
   },
 };
 

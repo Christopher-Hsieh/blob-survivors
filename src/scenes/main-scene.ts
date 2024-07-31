@@ -35,7 +35,6 @@ export class MainScene extends Phaser.Scene {
   }
 
   create() {
-
     const width = this.scale.gameSize.width;
     const height = this.scale.gameSize.height;
     this.parent = new Phaser.Structs.Size(width, height);
