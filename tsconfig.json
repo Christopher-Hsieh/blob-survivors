@@ -3,7 +3,8 @@
       "target": "ESNext",
       "module": "ESNext",
       "lib": ["DOM", "DOM.Iterable", "ESNext", "scripthost"],
-      "types": ["vite/client"],
+      "types": ["vite/client", "Phaser"],
+      "typeRoots": ["./node_modules/phaser/types"],
       "sourceMap": true,
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
@@ -14,5 +15,6 @@
       "isolatedModules": true,
       "noEmit": true,
     },
+
     "include": ["./src/**/*"]
   }
