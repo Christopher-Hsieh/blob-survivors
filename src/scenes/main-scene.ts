@@ -576,7 +576,11 @@ export class MainScene extends Phaser.Scene {
     this.physics.pause();
     this.scene.pause();
     this.input.mouse.releasePointerLock();
+    if (typeof screen.orientation !== 'undefined')  {
+      this.hit_debug_text.setText("Tap to retry");
+    } else {
     this.hit_debug_text.setText("Click to retry or press r");
+    }
     this.score = 0;
     this.scene.launch(SCENES.GAME_OVER);
   }
