@@ -44,7 +44,7 @@ export class MainScene extends Phaser.Scene {
 
     // Setup scoreboard
     this.score_text = this.add
-      .text(800, 20, "Score: " + this.score.toString(), {
+      .text(GAME_WIDTH-200, 20, "Score: " + this.score.toString(), {
         color: "#BDBEC7",
         fontFamily: "VerminVerile",
         fontSize: "22px",

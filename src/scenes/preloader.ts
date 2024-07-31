@@ -34,29 +34,29 @@ export class Preloader extends Phaser.Scene {
 
       create() {
         
-        this.add.text(450,100,"◻ⵔ△", { color: '#5F616E', fontSize: "40px" });
-        this.add.text(550,120,"v1.2", { color: '#5F616E', fontSize: "14px" });
+        this.add.text((GAME_WIDTH/2),GAME_HEIGHT-(GAME_HEIGHT-50),"◻ⵔ△", { color: '#5F616E', fontSize: "40px" });
+        this.add.text((GAME_WIDTH/2)+100,GAME_HEIGHT-(GAME_HEIGHT-70),"v1.3", { color: '#5F616E', fontSize: "14px" });
         this.graphics = this.add.graphics();
         this.graphics.lineStyle(2.5, 0x5F616E, 1);
 
         
         let tapCount = 0;
         this.keys = this.input.keyboard.addKeys("R");
-        if (typeof screen.orientation !== 'undefined')  {
+        // if (typeof screen.orientation !== 'undefined')  {
           
-          const playBtn = this.add.text(175, 150, " Tap here for fullscreen \n\n\t\t\t  Then Tap again to Play ", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "26px"})
-                                  .setInteractive()
-                                  .on('pointerdown', () => this.updateOnTap(++tapCount));
-          this.graphics.strokeRectShape(playBtn.getBounds());
-        } else {
-              this.add.text(200, 150, "~ Click To Play ~", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "52px" });
-              this.add.text(255, 210, "Controls: Mouse / WASD", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "28px" });
+        //   const playBtn = this.add.text(175, 150, " Tap here for fullscreen \n\n\t\t\t  Then Tap again to Play ", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "26px"})
+        //                           .setInteractive()
+        //                           .on('pointerdown', () => this.updateOnTap(++tapCount));
+        //   this.graphics.strokeRectShape(playBtn.getBounds());
+        // } else {
+              this.add.text((GAME_WIDTH/2)-100, GAME_HEIGHT-(GAME_HEIGHT-150), "~ Click or Tap To Play ~", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "28px" });
+              // this.add.text(255, 210, "Controls: Mouse / WASD", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "14px" });
             
             this.input.once('pointerdown', function () {
               this.parago.stop();
               this.scene.start(SCENES.MAIN_SCENE);
           }, this);
-        }
+        // }
           // Setup and Play song
         this.parago = this.sound.add("parago", {
           volume: 0.065,
