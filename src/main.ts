@@ -35,12 +35,12 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#1B1C22',
   render: { pixelArt: false, antialias: true },
   scale: {
-    mode: Phaser.Scale.RESIZE,
+    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     // `fullscreenTarget` must be defined for phones to not have
     // a small margin during fullscreen.
-    // fullscreenTarget: 'body',
-    expandParent: true,
+    fullscreenTarget: 'body',
+    expandParent: false,
   },
 };
 

@@ -16,7 +16,8 @@ import { GAME_HEIGHT, GAME_WIDTH, SCENES } from "../utils/constants";
 export class Preloader extends Phaser.Scene {
   keys: any;
   parago: Phaser.Sound.HTML5AudioSound;
-
+  graphics: Phaser.GameObjects.Graphics;
+  
     preload() {
         this.loadFont("VirtualRave", virtual_rave);
         this.loadFont("VerminVerile", vermin_verile);
@@ -32,22 +33,45 @@ export class Preloader extends Phaser.Scene {
       }
 
       create() {
+        
         this.add.text(450,100,"◻ⵔ△", { color: '#5F616E', fontSize: "40px" });
         this.add.text(550,120,"v1.2", { color: '#5F616E', fontSize: "14px" });
+        this.graphics = this.add.graphics();
+        this.graphics.lineStyle(2.5, 0x5F616E, 1);
 
-        this.add.text(200, 150, "~ Click To Play ~", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "52px" });
-        this.add.text(255, 210, "Controls: Mouse / WASD", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "28px" });
+        
+        let tapCount = 0;
         this.keys = this.input.keyboard.addKeys("R");
-        this.input.once('pointerdown', function () {
-          this.parago.stop();
-          this.scene.start(SCENES.MAIN_SCENE);
-      }, this);
-
+        if (typeof screen.orientation !== 'undefined')  {
+          
+          const playBtn = this.add.text(175, 150, " Tap here for fullscreen \n\n\t\t\t  Then Tap again to Play ", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "26px"})
+                                  .setInteractive()
+                                  .on('pointerdown', () => this.updateOnTap(++tapCount));
+          this.graphics.strokeRectShape(playBtn.getBounds());
+        } else {
+              this.add.text(200, 150, "~ Click To Play ~", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "52px" });
+              this.add.text(255, 210, "Controls: Mouse / WASD", { color: '#BDBEC7', fontFamily: 'VerminVerile', fontSize: "28px" });
+            
+            this.input.once('pointerdown', function () {
+              this.parago.stop();
+              this.scene.start(SCENES.MAIN_SCENE);
+          }, this);
+        }
           // Setup and Play song
         this.parago = this.sound.add("parago", {
           volume: 0.065,
         }) as Phaser.Sound.HTML5AudioSound;
         this.parago.play();
+      }
+
+      updateOnTap(tapCount) {
+        if (tapCount <= 2) {
+          const elem = document.getElementById("app");
+          elem.requestFullscreen();
+        } else {
+          this.parago.stop();
+          this.scene.start(SCENES.MAIN_SCENE);
+        }
       }
 
       update(time: number, delta: number): void {
