@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import { GAME_WIDTH, GAME_HEIGHT, SCENES } from "./constants";
 
 export function setupMouseControl(input: Phaser.Input.InputPlugin, player:  Phaser.Types.Physics.Arcade.ImageWithDynamicBody): void {
@@ -27,4 +26,23 @@ export function setupMouseControl(input: Phaser.Input.InputPlugin, player:  Phas
                  }
              }
          }, this);
+}
+
+export function handleTouchControl(input: Phaser.Input.InputPlugin, player:  Phaser.Types.Physics.Arcade.ImageWithDynamicBody): void {
+              player.x = input.pointer1.x;
+              player.y = input.pointer1.y;
+
+              // Force the player to stay on screen
+              if (player.x < 0) {
+                player.x = 0;
+              }
+              if (player.x > GAME_WIDTH) {
+                player.x = GAME_WIDTH;
+              }
+              if (player.y < 0) {
+                player.y = 0;
+              }
+              if (player.y > GAME_HEIGHT) {
+                player.y = GAME_HEIGHT;
+              }
 }
